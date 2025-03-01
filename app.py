@@ -21,28 +21,36 @@ class SpeedTest(db.Model):
     download = db.Column(db.Float, nullable=False)
     upload = db.Column(db.Float, nullable=False)
     ping = db.Column(db.Float, nullable=False)
+    share_link = db.Column(db.String(255), nullable=True)
 
 # Create database tables
 with app.app_context():
     db.create_all()
 
 def run_speed_test():
-    st = speedtest.Speedtest()
+    st = speedtest.Speedtest(secure=True)
     st.get_best_server()
     
     download_speed = st.download() / 1_000_000  # Convert to Mbps
     upload_speed = st.upload() / 1_000_000      # Convert to Mbps
     ping = st.results.ping
     
+    # Try to get share link, set to None if it fails
+    try:
+        share_link = st.results.share()
+    except (TypeError, AttributeError):
+        share_link = None
+    
     # Save to database
-    speed_test = SpeedTest(download=download_speed, upload=upload_speed, ping=ping)
+    speed_test = SpeedTest(download=download_speed, upload=upload_speed, ping=ping, share_link=share_link)
     db.session.add(speed_test)
     db.session.commit()
     
     return {
         'download': download_speed,
         'upload': upload_speed,
-        'ping': ping
+        'ping': ping,
+        'share_link': share_link
     }
 
 def create_graph(data_type):

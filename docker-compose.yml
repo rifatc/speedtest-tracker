@@ -8,5 +8,5 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      - FLASK_ENV=production
+      - FLASK_ENV=development
     restart: unless-stopped
