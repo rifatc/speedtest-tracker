@@ -30,6 +30,7 @@
                                 <th>Download (Mbps)</th>
                                 <th>Upload (Mbps)</th>
                                 <th>Ping (ms)</th>
+                                <th>Share Link</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,6 +40,7 @@
                                 <td>{{ "%.2f"|format(test.download) }}</td>
                                 <td>{{ "%.2f"|format(test.upload) }}</td>
                                 <td>{{ "%.1f"|format(test.ping) }}</td>
+                                <td>{% if test.share_link %}<a href="{{ test.share_link }}" target="_blank" class="btn btn-sm btn-primary">View Results</a>{% endif %}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
